@@ -239,7 +239,7 @@ Codex 内置策略/
 ├── scripts/
 │   ├── build-patched-codex.cmd        从公开源码重建补丁版 codex.exe
 │   ├── fix-migrations-crlf.py         **构建前必须**：迁移文件换行符规范化（见事故复盘）
-│   ├── install-patched-codex.ps1      安装 / 验证 / 回退
+│   ├── install-patched-codex.ps1      安装 / 验证 / 回退（含配套 exe 复制与校验）
 │   ├── check-codex-version.ps1        检查补丁是否生效、是否因升级而过期
 │   ├── sanitize-for-publish.py        发布前脱敏（移除个人环境标识）
 │   └── probe_policy.py                原版 vs 补丁版 策略对照探针
@@ -249,7 +249,8 @@ Codex 内置策略/
 └── docs/
     ├── builtin-policy-surface.md      **内置策略全清单 + 最大权限配置**
     ├── patch-verification.md          **绕过验证报告（51/51 全绕过）**
-    ├── incident-org-settings.md       **事故复盘：迁移文件 CRLF 导致桌面端无法启动**
+    ├── incident-org-settings.md       **事故复盘 1：迁移文件 CRLF 导致桌面端无法启动**
+    ├── incident-missing-helper-exes.md **事故复盘 2：缺配套 exe 导致工具全部失效**
     ├── matrix-out-original.json       入口级对照：原版 51/51 命中
     ├── matrix-out-patched.json        入口级对照：补丁版 0/51
     ├── probe-e2e-original.json        端到端：原版
@@ -344,3 +345,39 @@ Hook 层防护（如 `~/.codex/hooks.json` 中的 PreToolUse 规则）作为兜�
 
 在适用法律允许的最大范围内，本软件按「原样」提供，不附带任何明示或默示担保。
 详见 [LICENSE](LICENSE) 第 7、8 条。
+
+
+---
+
+## 12. 已知故障 2：`codex-code-mode-host.exe` 找不到
+
+详见 [`docs/incident-missing-helper-exes.md`](docs/incident-missing-helper-exes.md)。
+
+**症状**：Desktop 重启后发消息立即报错 ——
+「被 Codex 本地执行工具阻塞：系统找不到 `codex-code-mode-host.exe`，
+无法读取文件、修改代码或运行测试」。
+
+**原因**：`CODEX_CLI_PATH` 覆盖的是**整个 CLI 目录的解析基准**，不只是主程序。
+Desktop 在 `app.asar` 里硬编码了同目录配套清单：
+
+```js
+['codex-code-mode-host.exe', 'codex-windows-sandbox-setup.exe', 'codex-command-runner.exe']
+```
+
+安装脚本原先只复制了 `codex.exe`，所以这些组件找不到，工具链全部失效。
+
+**已修复**：安装脚本现在自动复制并校验这 3 个配套 exe；
+`-Verify` 会在缺失时明确报 `helpers missing`。
+
+**验证清单**（第 4 步是唯一能提前发现此类问题的检查）：
+
+```powershell
+# 1) 四个文件齐全
+ls "$env:LOCALAPPDATA\CodexLocalPatch\bin\0.160.0"
+# 2) 脚本自检
+powershell -File scripts\install-patched-codex.ps1 -Verify
+# 3) app-server 能起来
+# 4) 工具链真的能跑
+python scripts\probe_policy.py "$env:CODEX_CLI_PATH" --approval never `
+  --sandbox danger-full-access --cmd "Get-Location"   # 期望 EXECUTED
+```

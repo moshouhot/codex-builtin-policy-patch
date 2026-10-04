@@ -29,33 +29,72 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$Source = (Join-Path $env:BUILD_ROOT 'target\release\codex.exe'),
+    [string]$Source = '',
     [string]$Version = '0.160.0',
     [switch]$Rollback,
     [switch]$Verify
 )
 
-# Allow a per-user build root without editing this script.
+# Resolve the build root inside the body: parameter defaults are evaluated before
+# the environment is available in some hosts, which made Join-Path fail on null.
 if (-not $env:BUILD_ROOT) { $env:BUILD_ROOT = 'E:\codex-build' }
-if ($PSBoundParameters.ContainsKey('Source')) {
-    $Source = $PSBoundParameters['Source']
-} else {
-    $Source = Join-Path $env:BUILD_ROOT 'target\release\codex.exe'
-}
+if (-not $Source) { $Source = Join-Path $env:BUILD_ROOT 'target\release\codex.exe' }
 
 $ErrorActionPreference = 'Stop'
 $Root = Join-Path $env:LOCALAPPDATA 'CodexLocalPatch'
 $BinDir = Join-Path $Root "bin\$Version"
 $Target = Join-Path $BinDir 'codex.exe'
 
-function Get-BundledCli {
+# Desktop resolves these helper executables from the SAME directory as codex.exe
+# (hardcoded list in app.asar). Installing only codex.exe makes Desktop fail with
+# "system cannot find codex-code-mode-host.exe" and no tool can run.
+$SiblingExes = @(
+    'codex-code-mode-host.exe'
+    'codex-windows-sandbox-setup.exe'
+    'codex-command-runner.exe'
+)
+
+function Get-BundledCliDir {
     $pkg = Get-AppxPackage -Name OpenAI.Codex | Select-Object -First 1
     if (-not $pkg) { return $null }
     $candidates = Get-ChildItem -Path (Join-Path $env:LOCALAPPDATA 'OpenAI\Codex\bin') -Directory -ErrorAction SilentlyContinue |
         Sort-Object LastWriteTime -Descending |
-        ForEach-Object { Join-Path $_.FullName 'codex.exe' } |
-        Where-Object { Test-Path -LiteralPath $_ }
-    return $candidates | Select-Object -First 1
+        Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'codex.exe') }
+    if ($candidates) { return $candidates | Select-Object -First 1 } else { return $null }
+}
+
+function Get-BundledCli {
+    $dir = Get-BundledCliDir
+    if (-not $dir) { return $null }
+    return Join-Path $dir.FullName 'codex.exe'
+}
+
+function Install-SiblingExes {
+    # Copy the helper executables that Desktop expects next to codex.exe.
+    $srcDir = Get-BundledCliDir
+    if (-not $srcDir) {
+        Write-Host '      [WARN] bundled CLI dir not found; cannot copy helper executables.'
+        Write-Host '             Desktop needs them next to codex.exe or tools will not run.'
+        return
+    }
+    foreach ($name in $SiblingExes) {
+        $from = Join-Path $srcDir.FullName $name
+        $to = Join-Path $BinDir $name
+        if (Test-Path -LiteralPath $from) {
+            Copy-Item -LiteralPath $from -Destination $to -Force
+            Write-Host ("      {0} ({1:N0} bytes)" -f $name, (Get-Item -LiteralPath $to).Length)
+        } else {
+            Write-Host "      [WARN] missing in bundled dir: $name"
+        }
+    }
+}
+
+function Test-SiblingExes {
+    $missing = @()
+    foreach ($name in $SiblingExes) {
+        if (-not (Test-Path -LiteralPath (Join-Path $BinDir $name))) { $missing += $name }
+    }
+    return $missing
 }
 
 if ($Rollback) {
@@ -79,7 +118,14 @@ if ($Verify) {
     if (-not (Test-Path -LiteralPath $current)) { Write-Host 'RESULT: override points at a missing file'; return }
     $ver = & $current --version
     Write-Host "binary reports: $ver"
-    Write-Host 'RESULT: override active. Run scripts\probe_policy.py to confirm policy behaviour.'
+    $missing = Test-SiblingExes
+    if ($missing.Count -gt 0) {
+        Write-Host "RESULT: override active BUT helpers missing: $($missing -join ', ')"
+        Write-Host '        Desktop cannot run tools in this state. Re-run the installer without -Verify to copy them.'
+        return
+    }
+    Write-Host 'RESULT: override active, helper executables present.'
+    Write-Host '        Run scripts\probe_policy.py to confirm policy behaviour.'
     return
 }
 
@@ -95,13 +141,24 @@ New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
 Copy-Item -LiteralPath $Source -Destination $Target -Force
 Write-Host ("      {0:N0} bytes written" -f (Get-Item -LiteralPath $Target).Length)
 
-Write-Host "[3/4] Pointing CODEX_CLI_PATH at the patched binary..."
-[Environment]::SetEnvironmentVariable('CODEX_CLI_PATH', $Target, 'User')
-Write-Host "      CODEX_CLI_PATH = $Target"
+    Write-Host '[3/4] Installing helper executables next to codex.exe...'
+    Install-SiblingExes
 
-Write-Host "[4/4] Verifying..."
-$ver = & $Target --version
-Write-Host "      $ver"
+    Write-Host '[4/4] Pointing CODEX_CLI_PATH at the patched binary...'
+    [Environment]::SetEnvironmentVariable('CODEX_CLI_PATH', $Target, 'User')
+    Write-Host "      CODEX_CLI_PATH = $Target"
+
+    $missing = Test-SiblingExes
+    if ($missing.Count -gt 0) {
+        Write-Host "      [WARN] missing helpers: $($missing -join ', ')"
+        Write-Host '             Desktop will fail to run tools. Re-run after Codex re-extracts its bundled CLI.'
+    } else {
+        Write-Host '      all helper executables present'
+    }
+
+    Write-Host '[verify]'
+    $ver = & $Target --version
+    Write-Host "      $ver"
 Write-Host ''
 Write-Host 'Done. Fully quit Codex Desktop (tray -> Quit) and start it again.'
 Write-Host "Roll back any time with:  powershell -File $PSCommandPath -Rollback"

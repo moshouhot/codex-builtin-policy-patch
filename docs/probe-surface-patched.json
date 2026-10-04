@@ -1,0 +1,53 @@
+{
+  "executable": "C:/Users/<user>/AppData/Local/CodexLocalPatch/bin/0.160.0/codex.exe",
+  "approval_policy": "never",
+  "approvals_reviewer": null,
+  "sandbox": "danger-full-access",
+  "cases": [
+    {
+      "case": "cmd0",
+      "command": "Remove-Item -LiteralPath ./a.txt -Force",
+      "verdict": "EXECUTED",
+      "a_txt_exists": false,
+      "temp_exists": true,
+      "output_head": "Chunk ID: 4679c8\nWall time: 1.3751 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n",
+      "stderr_tail": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-86_4mdg1\\\\home\"))\nReading additional input from stdin...\n"
+    },
+    {
+      "case": "cmd1",
+      "command": "Remove-Item -LiteralPath ./a.txt -Recurse",
+      "verdict": "EXECUTED",
+      "a_txt_exists": false,
+      "temp_exists": true,
+      "output_head": "Chunk ID: f4d48b\nWall time: 1.2794 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n",
+      "stderr_tail": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-xtu2ab1c\\\\home\"))\nReading additional input from stdin...\n"
+    },
+    {
+      "case": "cmd2",
+      "command": "cmd /c del /f a.txt",
+      "verdict": "EXECUTED",
+      "a_txt_exists": false,
+      "temp_exists": true,
+      "output_head": "Chunk ID: c607a6\nWall time: 1.2097 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n",
+      "stderr_tail": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-aisig0ug\\\\home\"))\nReading additional input from stdin...\n"
+    },
+    {
+      "case": "cmd3",
+      "command": "cmd /c rd /s /q temp",
+      "verdict": "EXECUTED",
+      "a_txt_exists": true,
+      "temp_exists": false,
+      "output_head": "Chunk ID: c37305\nWall time: 1.3827 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n",
+      "stderr_tail": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-_je8j_zv\\\\home\"))\nReading additional input from stdin...\n"
+    },
+    {
+      "case": "cmd4",
+      "command": "Remove-Item -LiteralPath ./a.txt -Force -WhatIf",
+      "verdict": "EXECUTED",
+      "a_txt_exists": true,
+      "temp_exists": true,
+      "output_head": "Chunk ID: 5eb940\nWall time: 1.2729 seconds\nProcess exited with code 0\nOriginal token count: 29\nOutput:\nWhat if: 正在对目标“E:\\<TEMP_ROOT>\\TEMP\\policy-probe-r4cvv89o\\project\\a.txt”执行操作“删除文件”。\r\n",
+      "stderr_tail": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-r4cvv89o\\\\home\"))\nReading additional input from stdin...\n"
+    }
+  ]
+}

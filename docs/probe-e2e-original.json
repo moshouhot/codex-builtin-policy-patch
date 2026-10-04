@@ -1,0 +1,71 @@
+{
+  "executable": "C:/Users/<user>/AppData/Local/OpenAI/Codex/bin/8aaf1547b825b104/codex.exe",
+  "approval_policy": "never",
+  "approvals_reviewer": null,
+  "sandbox": "danger-full-access",
+  "cases": [
+    {
+      "case": "cmd0",
+      "command": "Remove-Item -LiteralPath ./a.txt -Force",
+      "verdict": "REJECTED_BY_POLICY",
+      "a_txt_exists": true,
+      "temp_exists": true,
+      "output_head": "exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'Remove-Item -LiteralPath ./a.txt -Force'` rejected: blocked by policy\\\")\" }",
+      "stderr_tail": "ing, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-xvm0w4_0\\\\home\"))\nReading additional input from stdin...\n2026-10-04T03:56:19.829881Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'Remove-Item -LiteralPath ./a.txt -Force'` rejected: blocked by policy\\\")\" }\n"
+    },
+    {
+      "case": "cmd1",
+      "command": "Remove-Item -LiteralPath ./temp -Recurse -Force",
+      "verdict": "REJECTED_BY_POLICY",
+      "a_txt_exists": true,
+      "temp_exists": true,
+      "output_head": "exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'Remove-Item -LiteralPath ./temp -Recurse -Force'` rejected: blocked by policy\\\")\" }",
+      "stderr_tail": "n though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-chxy200y\\\\home\"))\nReading additional input from stdin...\n2026-10-04T03:56:26.235138Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'Remove-Item -LiteralPath ./temp -Recurse -Force'` rejected: blocked by policy\\\")\" }\n"
+    },
+    {
+      "case": "cmd2",
+      "command": "ri -LiteralPath ./a.txt -Force",
+      "verdict": "REJECTED_BY_POLICY",
+      "a_txt_exists": true,
+      "temp_exists": true,
+      "output_head": "exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'ri -LiteralPath ./a.txt -Force'` rejected: blocked by policy\\\")\" }",
+      "stderr_tail": ": proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-_cmxcm_o\\\\home\"))\nReading additional input from stdin...\n2026-10-04T03:56:32.636698Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'ri -LiteralPath ./a.txt -Force'` rejected: blocked by policy\\\")\" }\n"
+    },
+    {
+      "case": "cmd3",
+      "command": "Remove-Item -LiteralPath ./a.txt -Force -WhatIf",
+      "verdict": "REJECTED_BY_POLICY",
+      "a_txt_exists": true,
+      "temp_exists": true,
+      "output_head": "exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'Remove-Item -LiteralPath ./a.txt -Force -WhatIf'` rejected: blocked by policy\\\")\" }",
+      "stderr_tail": "n though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-n7s0wy54\\\\home\"))\nReading additional input from stdin...\n2026-10-04T03:56:39.044713Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'Remove-Item -LiteralPath ./a.txt -Force -WhatIf'` rejected: blocked by policy\\\")\" }\n"
+    },
+    {
+      "case": "cmd4",
+      "command": "cmd /c del /f a.txt",
+      "verdict": "EXECUTED",
+      "a_txt_exists": false,
+      "temp_exists": true,
+      "output_head": "Chunk ID: cd8ece\nWall time: 1.2632 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n",
+      "stderr_tail": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-52_x2q_b\\\\home\"))\nReading additional input from stdin...\n"
+    },
+    {
+      "case": "cmd5",
+      "command": "bash -lc \"rm -f ./a.txt\"",
+      "verdict": "EXECUTED",
+      "a_txt_exists": false,
+      "temp_exists": true,
+      "output_head": "Chunk ID: 08aba9\nWall time: 1.5447 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n",
+      "stderr_tail": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-p_qu7q9n\\\\home\"))\nReading additional input from stdin...\n"
+    },
+    {
+      "case": "cmd6",
+      "command": "Get-Location",
+      "verdict": "EXECUTED",
+      "a_txt_exists": true,
+      "temp_exists": true,
+      "output_head": "Chunk ID: b301b0\nWall time: 1.1528 seconds\nProcess exited with code 0\nOriginal token count: 16\nOutput:\n\r\nPath\r\n----\r\nE:\\<TEMP_ROOT>\\TEMP\\policy-probe-fz8gypbf\\project\r\n\r\n",
+      "stderr_tail": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-fz8gypbf\\\\home\"))\nReading additional input from stdin...\n"
+    }
+  ]
+}

@@ -1,0 +1,803 @@
+[
+  {
+    "any_match": true,
+    "argv": [
+      "rm",
+      "-rf",
+      "/"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-rm-rf",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "rm",
+      "-f",
+      "/"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-rm-f",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "/bin/rm",
+      "-fr",
+      "/tmp/example"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-rm-bin-fr",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "rm",
+      "-r",
+      "-f",
+      "/tmp/example"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-rm-r-f",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "rm",
+      "--force",
+      "/tmp/example"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-rm-longforce",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "rm",
+      "/tmp/example",
+      "-f"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-rm-force-last",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "sudo",
+      "rm",
+      "-rf",
+      "/tmp/example"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-sudo-rm-rf",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "env",
+      "TARGET=/tmp/example",
+      "rm",
+      "-rf",
+      "/tmp/example"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-env-assign-rm-rf",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "bash",
+      "-lc",
+      "printf x | rm -rf /tmp/example"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-bashlc-pipe",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "bash",
+      "-lc",
+      "if test -d /tmp/example; then rm --force /tmp/example; fi"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-bashlc-if",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "bash",
+      "-lc",
+      "rm -rf \"$TARGET\" >/dev/null"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-bashlc-quoted",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "bash",
+      "-lc",
+      "for target in /tmp/a /tmp/b; do rm -r -f \"$target\"; done"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-bashlc-for",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "bash",
+      "-lc",
+      "echo \"$(rm -rf /tmp/example)\""
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-bashlc-subshell",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "bash",
+      "-lc",
+      "bash -c 'rm -rf /tmp/example'"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-bashlc-nested-bash",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "bash",
+      "-lc",
+      "trap 'rm -rf /tmp/example' EXIT"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-bashlc-trap",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "bash",
+      "-lc",
+      "for a in '-C5a25KeRr' '--' '--json' '--bogus'; do HOME=$(mktemp -d) MDE_URL=http://127.0.0.1:1 MDE_TOKEN=x node cli/mde.cjs ls \"$a\" >/tmp/mde-review-out 2>/tmp/mde-review-err; code=$?; printf '%s\\t%s\\t%s\\n' \"$a\" \"$code\" \"$(tr '\\n' ' ' </tmp/mde-review-err)\"; rm -rf \"$HOME\"; done"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-bashlc-realworld-loop",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "env",
+      "env",
+      "env",
+      "env",
+      "env",
+      "env",
+      "env",
+      "env",
+      "rm",
+      "-rf",
+      "/tmp/example"
+    ],
+    "generic": "ForcedRm",
+    "id": "posix-env-wrapper-depth-8",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "env",
+      "env",
+      "env",
+      "env",
+      "env",
+      "env",
+      "env",
+      "env",
+      "env",
+      "rm",
+      "-rf",
+      "/tmp/example"
+    ],
+    "generic": "Other",
+    "id": "posix-env-wrapper-depth-9",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "rm",
+      "/tmp/example"
+    ],
+    "generic": null,
+    "id": "posix-rm-without-force",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "ls",
+      "-la"
+    ],
+    "generic": null,
+    "id": "posix-ls",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "rm",
+      "--",
+      "-f"
+    ],
+    "generic": null,
+    "id": "posix-rm-after-dashdash",
+    "platform": "posix",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-NoLogo",
+      "-Command",
+      "Start-Process 'https://example.com'"
+    ],
+    "generic": "Other",
+    "id": "win-ps-startprocess-url",
+    "platform": "windows",
+    "powershell_words": "Other"
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "Start-Process('https://example.com');"
+    ],
+    "generic": "Other",
+    "id": "win-ps-startprocess-url-semicolon",
+    "platform": "windows",
+    "powershell_words": "Other"
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "Start-Process('HTTP://example.com');"
+    ],
+    "generic": "Other",
+    "id": "win-ps-startprocess-http-upper",
+    "platform": "windows",
+    "powershell_words": "Other"
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "Start-Process('hTtPs://example.com');"
+    ],
+    "generic": "Other",
+    "id": "win-ps-startprocess-mixedcase",
+    "platform": "windows",
+    "powershell_words": "Other"
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "powershell",
+      "-Command",
+      "Start-Process notepad.exe"
+    ],
+    "generic": null,
+    "id": "win-ps-startprocess-local",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "start",
+      "https://example.com"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-start-url",
+    "platform": "windows",
+    "powershell_words": "Other"
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "start https://example.com"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-start-url-single-string",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "start \"https://example.com\""
+    ],
+    "generic": "Other",
+    "id": "win-cmd-start-quoted-url",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "start \"\" https://example.com"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-start-title-url",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "msedge.exe",
+      "https://example.com"
+    ],
+    "generic": "Other",
+    "id": "win-msedge-url",
+    "platform": "windows",
+    "powershell_words": "Other"
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "explorer.exe",
+      "."
+    ],
+    "generic": null,
+    "id": "win-explorer-dir",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "Remove-Item test -Force"
+    ],
+    "generic": "Other",
+    "id": "win-ps-removeitem-force",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "Remove-Item test -Recurse -Force"
+    ],
+    "generic": "Other",
+    "id": "win-ps-removeitem-recurse-force",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "pwsh",
+      "-Command",
+      "ri test -Force"
+    ],
+    "generic": "Other",
+    "id": "win-ps-ri-force",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "powershell",
+      "-Command",
+      "Remove-Item test"
+    ],
+    "generic": null,
+    "id": "win-ps-removeitem-noforce",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "Remove-Item -Path 'test' -Recurse -Force"
+    ],
+    "generic": "Other",
+    "id": "win-ps-removeitem-path-recurse-force",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "Remove-Item test -Force; Write-Host done"
+    ],
+    "generic": "Other",
+    "id": "win-ps-removeitem-force-semicolon",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "if ($true) { Remove-Item test -Force}"
+    ],
+    "generic": "Other",
+    "id": "win-ps-removeitem-force-block",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "[void]( Remove-Item test -Force)]"
+    ],
+    "generic": "Other",
+    "id": "win-ps-removeitem-force-brackets",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "Write-Host hi;Remove-Item -Force C:\\tmp"
+    ],
+    "generic": "Other",
+    "id": "win-ps-chained-nospace",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "del,-Force,C:\\foo"
+    ],
+    "generic": "Other",
+    "id": "win-ps-comma-separated",
+    "platform": "windows",
+    "powershell_words": "Other"
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "powershell",
+      "-Command",
+      "rm test -Force"
+    ],
+    "generic": "Other",
+    "id": "win-ps-rm-alias-force",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "powershell",
+      "-Command",
+      "Get-ChildItem -Force; Remove-Item test"
+    ],
+    "generic": null,
+    "id": "win-ps-force-separate-cmd",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "Remove-Item",
+      "test",
+      "-Force"
+    ],
+    "generic": null,
+    "id": "win-ps-words-removeitem-force",
+    "platform": "windows",
+    "powershell_words": "Other"
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "del",
+      "/f",
+      "test.txt"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-del-force",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "erase",
+      "/f",
+      "test.txt"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-erase-force",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "cmd",
+      "/c",
+      "del",
+      "test.txt"
+    ],
+    "generic": null,
+    "id": "win-cmd-del-noforce",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "rd",
+      "/s",
+      "/q",
+      "test"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-rd-recursive",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "cmd",
+      "/c",
+      "rd",
+      "/s",
+      "test"
+    ],
+    "generic": null,
+    "id": "win-cmd-rd-noquiet",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "rmdir",
+      "/s",
+      "/q",
+      "test"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-rmdir-recursive",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "cmd",
+      "/c",
+      "del",
+      "C:/foo/bar.txt"
+    ],
+    "generic": null,
+    "id": "win-cmd-del-path-with-f",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "cmd",
+      "/c",
+      "rd",
+      "C:/source"
+    ],
+    "generic": null,
+    "id": "win-cmd-rd-path-with-s",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "echo",
+      "hello",
+      "&",
+      "del",
+      "/f",
+      "file.txt"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-chained-del",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": false,
+    "argv": [
+      "cmd",
+      "/c",
+      "echo",
+      "del",
+      "/f"
+    ],
+    "generic": null,
+    "id": "win-cmd-echo-del",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "del /f file.txt"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-del-single-string",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "echo hello & del /f file.txt"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-chained-single-string",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "echo hi&del /f file.txt"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-chained-nospace-amp",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "echo hi&&del /f file.txt"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-chained-nospace-andand",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "echo hi||del /f file.txt"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-chained-nospace-oror",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "echo hi&rmdir /s /q testdir"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-chained-nospace-rmdir",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd",
+      "/c",
+      "DEL",
+      "/F",
+      "file.txt"
+    ],
+    "generic": "Other",
+    "id": "win-cmd-del-uppercase",
+    "platform": "windows",
+    "powershell_words": null
+  },
+  {
+    "any_match": true,
+    "argv": [
+      "cmd.exe",
+      "/r",
+      "del",
+      "/f",
+      "file.txt"
+    ],
+    "generic": "Other",
+    "id": "win-cmdexe-r-del-force",
+    "platform": "windows",
+    "powershell_words": null
+  }
+]

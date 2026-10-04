@@ -1,0 +1,46 @@
+{
+  "executable": "C:/Users/<user>/AppData/Local/OpenAI/Codex/bin/8aaf1547b825b104/codex.exe",
+  "approval_policy": "never",
+  "cases": [
+    {
+      "case": "force-delete file",
+      "command": "Remove-Item -LiteralPath ./a.txt -Force",
+      "verdict": "REJECTED_BY_POLICY",
+      "a_txt_exists": true,
+      "temp_exists": true,
+      "output_head": "exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'Remove-Item -LiteralPath ./a.txt -Force'` rejected: blocked by policy\\\")\" }"
+    },
+    {
+      "case": "plain delete file",
+      "command": "Remove-Item -LiteralPath ./a.txt",
+      "verdict": "EXECUTED",
+      "a_txt_exists": false,
+      "temp_exists": true,
+      "output_head": "Chunk ID: 0c89b0\nWall time: 1.5001 seconds\nProcess exited with code 0\nOriginal token count: 0\nOutput:\n"
+    },
+    {
+      "case": "force-delete dir recursive",
+      "command": "Remove-Item -LiteralPath ./temp -Recurse -Force",
+      "verdict": "REJECTED_BY_POLICY",
+      "a_txt_exists": true,
+      "temp_exists": true,
+      "output_head": "exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'Remove-Item -LiteralPath ./temp -Recurse -Force'` rejected: blocked by policy\\\")\" }"
+    },
+    {
+      "case": "rm -rf alias",
+      "command": "rm -rf ./temp",
+      "verdict": "EXECUTED",
+      "a_txt_exists": true,
+      "temp_exists": true,
+      "output_head": "Chunk ID: 231732\nWall time: 1.2946 seconds\nProcess exited with code 1\nOriginal token count: 30\nOutput:\nRemove-Item: \r\nLine |\r\n   2 |  rm -rf ./temp\r\n     |     ~~~\r\n     | 找不到与参数名称 'rf' 匹配的参数。\r\n"
+    },
+    {
+      "case": "control (read only)",
+      "command": "Get-Location",
+      "verdict": "EXECUTED",
+      "a_txt_exists": true,
+      "temp_exists": true,
+      "output_head": "Chunk ID: 453688\nWall time: 1.1316 seconds\nProcess exited with code 0\nOriginal token count: 16\nOutput:\n\r\nPath\r\n----\r\nE:\\<TEMP_ROOT>\\TEMP\\policy-probe-fqo9poud\\project\r\n\r\n"
+    }
+  ]
+}

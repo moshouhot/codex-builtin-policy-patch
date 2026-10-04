@@ -1,0 +1,19 @@
+OpenAI Codex
+Copyright 2025 OpenAI
+
+This project includes code derived from [Ratatui](https://github.com/ratatui/ratatui), licensed under the MIT license.
+Copyright (c) 2016-2022 Florian Dehau
+Copyright (c) 2023-2025 The Ratatui Developers
+
+-------------------------------------------------------------------------------
+
+Codex Built-in Policy Patch
+Copyright 2026 the Codex Built-in Policy Patch contributors
+
+This repository is a set of LOCAL MODIFICATIONS to OpenAI Codex. It contains no
+OpenAI source code; it ships a patch, build scripts, and measurement artifacts.
+The distributed artifacts are derived from OpenAI Codex (Apache License 2.0).
+
+Modifications made by this project are marked in-tree with `LOCAL PATCH`
+comments and are itemized in patches/ and in the changelog sections of README.md.
+See LICENSE for the full Apache License 2.0 text.

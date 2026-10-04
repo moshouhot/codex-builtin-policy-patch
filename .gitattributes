@@ -1,0 +1,33 @@
+# Pin line endings for this repository.
+#
+# This matters more than usual here: the whole project exists because a line
+# ending mismatch broke things. sqlx computes migration checksums from the raw
+# bytes of the .sql files, and the patch in patches/ must apply cleanly.
+#
+# Note the important asymmetry, documented in docs/incident-org-settings.md:
+#   * THIS repository is stored with LF.
+#   * The OpenAI *source tree* being patched needs its
+#     codex-rs/state/*_migrations/*.sql files as CRLF, because that is how
+#     OpenAI publishes them and how their checksums were computed.
+#     scripts/fix-migrations-crlf.py enforces that at build time.
+#     Do NOT "fix" that by adding a .gitattributes rule to the codex checkout.
+
+# Default: normalize to LF in the repository, LF in the working tree.
+* text=auto eol=lf
+
+# The patch must stay LF or `git apply` fails on some setups.
+*.patch text eol=lf
+
+# Windows launchers: CRLF in the working tree so cmd.exe is happy.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# PowerShell prefers CRLF on Windows.
+*.ps1 text eol=crlf
+
+# Binary-ish artifacts that must never be normalized.
+*.exe binary
+*.dll binary
+*.gz  binary
+*.lib binary
+*.pdb binary

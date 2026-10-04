@@ -1,0 +1,17 @@
+{
+  "executable": "C:/Users/<user>/AppData/Local/OpenAI/Codex/bin/8aaf1547b825b104/codex.exe",
+  "approval_policy": "on-request",
+  "approvals_reviewer": "user",
+  "sandbox": "danger-full-access",
+  "cases": [
+    {
+      "case": "cmd0",
+      "command": "Remove-Item -LiteralPath ./a.txt -Force",
+      "verdict": "REJECTED_BY_POLICY",
+      "a_txt_exists": true,
+      "temp_exists": true,
+      "output_head": "exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'Remove-Item -LiteralPath ./a.txt -Force'` rejected: blocked by policy\\\")\" }",
+      "stderr_tail": "ing, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\\" (codex_home: AbsolutePathBuf(\"E:\\\\<TEMP_ROOT>\\\\TEMP\\\\policy-probe-q3wmjk43\\\\home\"))\nReading additional input from stdin...\n2026-10-04T03:23:07.617459Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: \"Rejected(\\\"`\\\\\\\"C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\<user>\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Microsoft\\\\\\\\\\\\\\\\WindowsApps\\\\\\\\\\\\\\\\pwsh.exe\\\\\\\" -Command 'Remove-Item -LiteralPath ./a.txt -Force'` rejected: blocked by policy\\\")\" }\n"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+# Build artifacts and local scratch
+target/
+*.exe
+*.dll
+*.pdb
+*.lib
+*.gz
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Local install / backup leftovers
+*.bak
+*.broken-*
+codex.exe
+
+# Editor / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

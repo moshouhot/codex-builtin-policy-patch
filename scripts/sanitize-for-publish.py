@@ -6,37 +6,42 @@ embed the author's Windows profile directory (which contains the account name an
 hostname) and the sandbox temp root. Those are not secrets, but they are personal
 environment details with no reason to ship in a public repository.
 
-Replacement targets the MARKER itself rather than a full path, so it works
-regardless of how deeply backslashes are escaped inside JSON strings. The
-surrounding output -- the actual policy verdicts -- is left byte-for-byte intact,
-so the evidence remains verifiable.
+No personal identifier is hardcoded here. The Windows profile path is derived
+from the environment at run time, and anything that looks like a user profile
+path is matched generically, so this script is safe to publish and reusable by
+anyone preparing their own artifacts.
 
-Deliberately NOT redacted:
-  * `codex-build` -- an ordinary directory name a reader may legitimately reuse.
-  * drive letters and generic paths -- carry no personal information.
+The surrounding output -- the actual policy verdicts -- is left byte-for-byte
+intact, so the evidence remains verifiable.
 
 Usage:
     python sanitize-for-publish.py [root]
 
-Exits non-zero if any known personal marker survives.
+Exits non-zero if a profile-path-shaped string survives.
 """
 import os
+import re
 import sys
 
-# (marker, replacement). Chosen so they match at any escaping level.
-REPLACEMENTS = [
-    # Windows profile path segment: contains both account name and hostname.
-    ("Administrator.DESKTOP-4A6KNOF", "<user>"),
-    # Sandbox temp root used by the probe harness.
-    ("360data", "<TEMP_ROOT>"),
-]
+# Windows profile paths, e.g. C:\Users\someone or C:/Users/someone.
+# Applied to the raw text, so it matches at any JSON escaping depth.
+PROFILE_RE = re.compile(
+    r"([A-Za-z]:[\\/]+[Uu]sers[\\/]+)([^\\/\s\"'<>;,)\]]+)"
+)
+# Sandbox / virtualization temp roots that leak host setup.
+TEMP_ROOT_RE = re.compile(r"([A-Za-z]:[\\/]+)(\d{3,8}data)([\\/]+TEMP)", re.IGNORECASE)
 
-FORBIDDEN = [marker for marker, _ in REPLACEMENTS]
 
-# This script necessarily contains the markers as literals; skip it.
-SELF = "sanitize-for-publish.py"
+def _redact(text):
+    text = PROFILE_RE.sub(lambda m: m.group(1) + "<user>", text)
+    text = TEMP_ROOT_RE.sub(lambda m: m.group(1) + "<temp-root>" + m.group(3), text)
+    return text
+
 
 TEXT_EXT = {".md", ".json", ".py", ".rs", ".ps1", ".cmd", ".patch", ".txt"}
+
+# Skip this file: its regexes look like the thing they are matching.
+SELF = os.path.basename(__file__)
 
 
 def _walk(root):
@@ -55,9 +60,7 @@ def sanitize(root):
             raw = open(path, encoding="utf-8").read()
         except (UnicodeDecodeError, OSError):
             continue
-        new = raw
-        for marker, repl in REPLACEMENTS:
-            new = new.replace(marker, repl)
+        new = _redact(raw)
         if new != raw:
             open(path, "w", encoding="utf-8", newline="").write(new)
             changed.append(os.path.relpath(path, root))
@@ -73,9 +76,13 @@ def audit(root):
             text = open(path, encoding="utf-8", errors="replace").read()
         except OSError:
             continue
-        for marker in FORBIDDEN:
-            if marker in text:
-                hits.setdefault(os.path.relpath(path, root), set()).add(marker)
+        found = set()
+        if PROFILE_RE.search(text):
+            found.add("profile-path")
+        if TEMP_ROOT_RE.search(text):
+            found.add("temp-root")
+        if found:
+            hits[os.path.relpath(path, root)] = found
     return hits
 
 
@@ -87,11 +94,11 @@ def main():
         print("   ", c)
     hits = audit(root)
     if hits:
-        print("\n[FAIL] personal markers still present:")
-        for path, markers in sorted(hits.items()):
-            print("   %s -> %s" % (path, ", ".join(sorted(markers))))
+        print("\n[FAIL] machine-specific identifiers still present:")
+        for path, kinds in sorted(hits.items()):
+            print("   %s -> %s" % (path, ", ".join(sorted(kinds))))
         return 1
-    print("\n[OK] no personal markers remain")
+    print("\n[OK] no machine-specific identifiers remain")
     return 0
 
 

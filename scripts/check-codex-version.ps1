@@ -49,7 +49,7 @@ function Get-FileVersionString {
     if ($rg) {
         foreach ($p in $Patterns) {
             $out = & $rg -a -o --no-filename $p $Path 2>$null | Select-Object -First 1
-            if ($out -and $out -match '(\d+\.\d+\.\d+)') { return $Matches[1] }
+            if ($out -and $out -match '((?:\d+\.\d+\.\d+)(?:-[0-9A-Za-z]+(?:\.\d+)*)?)') { return $Matches[1] }
         }
     }
 
@@ -65,7 +65,7 @@ function Get-FileVersionString {
             $len = $carry + $read
             $text = [Text.Encoding]::ASCII.GetString($buf, 0, $len)
             foreach ($p in $Patterns) {
-                $m = [regex]::Match($text, [regex]::Escape($p) + '(\d+\.\d+\.\d+)')
+                $m = [regex]::Match($text, [regex]::Escape($p) + '((?:\d+\.\d+\.\d+)(?:-[0-9A-Za-z]+(?:\.\d+)*)?)')
                 if ($m.Success) { return $m.Groups[1].Value }
             }
             $carry = [Math]::Min($maxNeedle - 1, $len)

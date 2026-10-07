@@ -11,6 +11,18 @@ REM
 REM  Why -j 6: with the default job count (16 logical CPUs) rustc intermittently
 REM  ICEs / produces corrupt crate metadata on this machine. -j 6 is stable.
 REM
+REM  MEMORY: the final `codex-cli` thin-LTO link step is the memory peak. On this
+REM  machine (32 GB RAM + a 20 GB pagefile) the commit limit was 51 GB, of which
+REM  the system already used ~44 GB, leaving under 7 GB -- and the link step died
+REM  with `rustc-LLVM ERROR: out of memory`. Adding a second pagefile on a drive
+REM  with free space raised the commit limit to 83 GB and the build completed.
+REM  If you hit the same OOM, check the budget before touching build flags:
+REM      Get-CimInstance Win32_OperatingSystem |
+REM        Select TotalVirtualMemorySize, FreeVirtualMemory
+REM  Changing -C flags (lto/codegen-units/debuginfo) forces a full rebuild of every
+REM  dependency and can surface spurious `can't find crate` errors -- fix the
+REM  memory budget instead.
+REM
 REM  Configuration: override any of these via environment variables before
 REM  running, e.g.  set BUILD_ROOT=D:\codex && build-patched-codex.cmd
 REM

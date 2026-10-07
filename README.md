@@ -194,10 +194,20 @@ Store 升级 Desktop 后，新版自带 CLI 会被解包到新的 `bin\<新哈�
 scripts\build-patched-codex.cmd
 ```
 
-脚本会：确保 Rust 1.95.0 与官方预编译 rusty_v8 产物 → 应用 `patches\*.patch` → release 构建。
+脚本会：确保 Rust 1.95.0 与官方预编译 rusty_v8 产物 → 应用 `patches\*.patch` →
+**把迁移 `.sql` 规范化为 CRLF**（必须，见 [事故复盘 1](docs/incident-org-settings.md)）→ release 构建。
 
-**注意**：脚本内硬编码了本机路径（`E:\codex-build`、VS2022 Community 位置、
-`rusty_v8` 版本 `150.4.0` / profile `ptrcomp_sandbox_release`）。换机器需同步调整。
+路径通过环境变量可覆盖，不必改脚本：
+
+```cmd
+set BUILD_ROOT=D:\codex
+set VC_VARS=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat
+scripts\build-patched-codex.cmd
+```
+
+默认值：`BUILD_ROOT=E:\codex-build`、`VC_VARS` 指向 VS2022 Community。
+`rusty_v8` 版本 `150.4.0` / profile `ptrcomp_sandbox_release` 与上游发布一致，
+升级 Codex 版本时需要同步核对。
 
 ---
 
@@ -251,6 +261,7 @@ Codex 内置策略/
     ├── patch-verification.md          **绕过验证报告（51/51 全绕过）**
     ├── incident-org-settings.md       **事故复盘 1：迁移文件 CRLF 导致桌面端无法启动**
     ├── incident-missing-helper-exes.md **事故复盘 2：缺配套 exe 导致工具全部失效**
+    ├── incident-build-oom.md          **事故复盘 3：构建 OOM（页面文件不足）**
     ├── matrix-out-original.json       入口级对照：原版 51/51 命中
     ├── matrix-out-patched.json        入口级对照：补丁版 0/51
     ├── probe-e2e-original.json        端到端：原版
@@ -381,3 +392,36 @@ powershell -File scripts\install-patched-codex.ps1 -Verify
 python scripts\probe_policy.py "$env:CODEX_CLI_PATH" --approval never `
   --sandbox danger-full-access --cmd "Get-Location"   # 期望 EXECUTED
 ```
+
+
+---
+
+## 13. 已知故障 3：构建 OOM
+
+详见 [`docs/incident-build-oom.md`](docs/incident-build-oom.md)。
+
+**症状**：构建时反复失败，日志含 `rustc-LLVM ERROR: out of memory`。
+
+**原因**：**不是代码问题，是提交内存不足**。32 GB 物理 + 20 GB 页面文件 = 51 GB
+提交上限，其中约 44 GB 已被系统占用，只剩不到 7 GB，而最终 `codex-cli` 的
+thin-LTO 链接需要更多。
+
+**注意**：这与早先记录的「假错误 ICE」是**两个不同的问题**，退出码都是
+`STATUS_STACK_BUFFER_OVERRUN`，只能靠日志里的确切字符串区分：
+
+| 日志内容 | 真实原因 | 处理 |
+|---|---|---|
+| `out of memory` | 内存预算不足 | **加页面文件**，不要动编译参数 |
+| `can't find crate` / `invalid metadata` | 假错误 ICE | 单独重编该 crate |
+
+**修复**：在有空闲空间的盘加页面文件（本机 E: 有 78 GB）：
+
+```powershell
+wmic pagefileset create name="E:\pagefile.sys",InitialSize=32768,MaximumSize=32768
+```
+
+提交上限 51.4 → 83.4 GB，构建一次通过。
+
+**踩过的坑**：曾尝试用 `-C lto=off -C codegen-units=16` 降低链接内存，
+结果 cargo **全量重编所有依赖**并触发假错误（`gix` 报 2417 个错，单独编译 2 秒通过）。
+**改 `-C` 标志会作废整个增量缓存，不要用它解决 OOM。**
